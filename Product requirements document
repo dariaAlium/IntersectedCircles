@@ -1,0 +1,5 @@
+input file format - txt file should be used
+circles that were previously identified as intersecting should not be checked for intersection
+in case all circles intersect, the program must report this
+If the input file is empty, the program should report this
+The input file should not be changed
