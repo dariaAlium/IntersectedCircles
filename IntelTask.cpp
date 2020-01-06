@@ -1,10 +1,10 @@
-﻿#include <iostream>
+#include <iostream>
 #include <vector>
 #include <string>
 #include <fstream>
 #include <cstring>
 #include <algorithm>
-
+#include <set>
 using namespace std;
 
 template <typename Type>
@@ -73,12 +73,20 @@ bool operator< (Circle<Type>& c1, Circle<Type>& c2)
 template <typename Type>
 
 int find_max(vector<Circle<Type>> v) {
-	for (unsigned int i = v.size() - 1; i > 0; i--) {
-		for (unsigned int j = i - 1; j >= 0; j--) {
-			if (v.at(i).is_intersected(v.at(j))) 
+	set<int> s;
+	s.insert(-1);
+	for (unsigned int i = 0; i < v.size(); i++) {
+		if(s.find(i) != s.end()) continue;
+		for (unsigned int j = 1; j < v.size(); j++) {
+			if (s.find(j) != s.end() || i == j) continue;
+			if (v.at(i).is_intersected(v.at(j))) {
+				
+				s.insert(i);
+				s.insert(j);
 				break;
-			if (j == 0) 
-				return j;;
+			}
+			if (j == v.size() - 1)
+				return i;
 		}
 	}
 	return -1;
@@ -107,9 +115,14 @@ int main()
 			v.push_back(Circle<double>(id, st.at(0), st.at(1), st.at(2)));
 		}
 		sort(v.begin(), v.end());
-		int number = find_max(v);
-		cout << v.at(number);
-
+		reverse(v.begin(), v.end());
+		try {
+			int number = find_max(v);
+			cout << v.at(number);
+		}
+		catch (out_of_range& a) {
+			cout << "There are no such circle";
+		}
 	}
 	if (file.is_open()) file.close();
 
